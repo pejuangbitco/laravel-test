@@ -19,7 +19,7 @@ class BookReviewResource extends JsonResource
             'id' => $this->id,
             'review' => $this->review,
             'comment' => $this->comment,
-            'users' => $this->user,
+            'user' => $this->user,
         ];
     }
 }

@@ -25,7 +25,7 @@ class PostBookReviewRequest extends FormRequest
     {
         return [
             // @TODO implement
-            'review' => 'required|integer',
+            'review' => 'required|integer|min:1|max:10',
             'comment' => 'required|string',
         ];
     }

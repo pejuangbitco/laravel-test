@@ -17,23 +17,35 @@ class BooksController extends Controller
     public function index(Request $request)
     {
         // @TODO implement
-        $title = $request->query('title', '');
-        $sortColumn = $request->query('sortColumn', 'title');
-        $sortDirection = $request->query('sortDirection', 'ASC');
-        $books = Book::with(['authors'])
-            ->where('title', 'LIKE', "%$title%")
-            ->whereHas('authors', function ($query) use ($request) {
-                $authors = $request->query('authors', '');
+        $sortColumn = $request->query('sortColumn', 'id');
+        $sortDirection = $request->query('sortDirection', 'ASC');        
+        $title = $request->query('title');
+        $authors = $request->query('authors');
 
-                $authors = explode(',', $authors);
-                if(count($authors) > 1) {
-                    $query->whereIn('authors.id', [2, 3]);
+        //map authorIds to int[]
+        $authorIds = false;
+        if($authors) {
+            $authors = explode(',', $authors);
+            $authorIds = [];
+            foreach($authors as $author) {
+                array_push($authorIds, intval($author));
+            }
+        }
+        
+        $books = Book::where('title', 'LIKE', "%{$title}%");
+        
+        if($authorIds) {
+            $books = $books->whereHas('authors', function ($query) use ($authorIds) {
+                if($authorIds) {
+                    $query->whereIn('authors.id', $authorIds);                
                 }
-            })
-            ->withCount(['reviews','reviews as avg_review' => function ($query) {
-                $query->select(DB::raw('coalesce(avg(review),0)'));
-            }])
-            ->orderBy($sortColumn, $sortDirection)->paginate();
+            });
+        }
+            
+        $books = $books->withCount(['reviews','reviews as avg_review' => function ($query) {
+            $query->select(DB::raw('coalesce(round(avg(review),0),0)'));
+        }])->orderBy($sortColumn, $sortDirection)->paginate();
+
         return BookResource::collection($books);
     }
 

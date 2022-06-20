@@ -25,7 +25,7 @@ class PostBookRequest extends FormRequest
     {
         // @TODO implement
         return [
-            'isbn' => 'required|digits:13|unique:books,isbn',
+            'isbn' => 'bail|required|numeric|digits:13|unique:books,isbn',
             'title' => 'required|string',
             'description' => 'required|string',
             'authors' => 'required|array',

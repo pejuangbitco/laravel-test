@@ -23,8 +23,8 @@ class BookResource extends JsonResource
             'published_year' => $this->published_year,
             'authors' => $this->authors,
             'review' => [
-                'avg' => $this->avg_review ? $this->avg_review : 0,
-                'count' => $this->reviews_count ? $this->reviews_count : 0,
+                'avg' => $this->avg_review,
+                'count' => $this->reviews_count,
             ]
         ];
     }
