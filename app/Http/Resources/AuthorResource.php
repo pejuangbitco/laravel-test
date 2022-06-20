@@ -16,6 +16,10 @@ class AuthorResource extends JsonResource
     {
         return [
             // @TODO implement
+            'id' => $this->id,
+            'name' => $this->name,
+            'surname' => $this->surname,
+            'books' => $this->books,
         ];
     }
 }

@@ -25,7 +25,12 @@ class PostBookRequest extends FormRequest
     {
         // @TODO implement
         return [
-            //
+            'isbn' => 'required|digits:13|unique:books,isbn',
+            'title' => 'required|string',
+            'description' => 'required|string',
+            'authors' => 'required|array',
+            'authors.*' => 'required|integer|exists:authors,id',
+            'published_year' => 'required|integer|min:1900|max:2020',
         ];
     }
 }
